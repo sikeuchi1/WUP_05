@@ -26,6 +26,8 @@ DrugUser - categorical
 Infected - categorical
 Infected depends on treatment among drug users.
 We get just the drug users from the population. 
+Null Hypothesis (H0): The new preventative AIDS drug (TriUmpsal) does not show a significant difference in preventing AIDS among DrugUsers compared to the placebo group.
+The alternative hypothesis is that the new preventative AIDS drug (TriUmpsal) is effective in reducing the number of AIDS among drug users.
 ```{r}
 drugUserData = select(triUmp, treatment, DrugUser, infected)
 drugUserData = filter(drugUserData, DrugUser=='yes')
@@ -42,17 +44,28 @@ barchartGC(~infected + treatment,data=drugUserData)
 barchartGC(~infected + treatment,data=drugUserData, type="percent")
 
 ```
+ 
+The percentage of aid infection attributable to the drug is significantly reduced compared to the placebo, exhibiting over a 60% deviation in transmission rates
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
 
 ### Numerical Descriptive Results
-
+```{r}
+table1 <- xtabs(~infected + treatment,data=drugUserData)
+rowPerc(table1)
+colPerc(table1)
+```
+Since the the percentage of drug and placebo users having aids isn't around 50% with the percentage of aid users taking the drug being 24.29 and the percentage of placebo users contracting Aids being 75.61, it provides further evidence that this is statisically significant. 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
 ## Inferential Results
-
-<!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
-
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+fisher.test(table1)
+```
+The p-value of 1.242e-07 is less than 0.05, then we have evidence that there is a statistically significant association between treatment and aids infection. According to the Pearson's Chi-squared test with Yates' continuity correction, while the amount of people contracting AIDS who received the placebo had 106 being infected with AIDS compared to the 34. The Fischer test yielded a p-value of 4.23e-08 which further supports that there is a statically significant association. Furthermore, the 95 percent confidence 
+interval for an odds ratio does not include 1 providing further evidence that it is statistically significant
 
 # Discussion and Conclusion
-
+The original question was whether or not the preventative AIDS drug (TriUmpsal)  shows a significant difference in preventing AIDS among DrugUsers compared to the placebo group. First of all, the percentage of aid infection attributable to the drug is significantly reduced compared to the placebo, exhibiting over a 60% deviation in transmission rates. Furthermore, the percentage of aid users taking the drug is 24.29% and the percentage of placebo users contracting Aids being 75.61%. Furthermore, the p-value of 1.242e-07 and 4.23e-08 from the Pearson's Chi-squared test and the Fischer test is less than 0.05 providing further evidence that there is a statistically significant association between treatment and aids infection. Based on this data, we can reject the Null hypothesis and the drug is effective in preventing aids. 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
